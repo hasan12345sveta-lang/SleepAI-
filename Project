@@ -1,0 +1,359 @@
+```html
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep AI — Intelligent Sleep Optimization</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            cosmic: {
+              950: '#060813',
+              900: '#0B0F23',
+              800: '#131A38',
+              700: '#1E2852',
+            },
+            amberGlow: '#F59E0B',
+            indigoGlow: '#6366F1',
+            violetGlow: '#8B5CF6',
+          },
+          animation: {
+            'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Smooth hardware-accelerated transitions */
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    /* Glassmorphism panels */
+    .glass-panel {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, background-color 0.35s ease, border-color 0.35s ease;
+    }
+    .dark .glass-panel {
+      background: rgba(15, 22, 46, 0.68);
+      border: 1px solid rgba(129, 140, 248, 0.16);
+      box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.55);
+    }
+    html:not(.dark) .glass-panel {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(99, 102, 241, 0.14);
+      box-shadow: 0 12px 32px -8px rgba(30, 41, 59, 0.08);
+    }
+
+    .glass-card-hover:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.6);
+    }
+
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 999px;
+      outline: none;
+    }
+    .dark input[type="range"] {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    html:not(.dark) input[type="range"] {
+      background: rgba(15, 23, 42, 0.12);
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #6366F1;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+      transition: transform 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* Animated Ambient Background Orbs */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 9999px;
+      filter: blur(95px);
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+
+    /* Shake animation for wrong alarm challenge answer */
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .animate-shake {
+      animation: shakeError 0.35s ease-in-out;
+    }
+
+    /* Markdown formatting inside Sleep AI */
+    .ai-prose h4 { font-weight: 700; margin-top: 0.65rem; margin-bottom: 0.25rem; color: #818cf8; }
+    html:not(.dark) .ai-prose h4 { color: #4f46e5; }
+    .ai-prose ul { list-style-type: disc; padding-left: 1.25rem; margin: 0.35rem 0; }
+    .ai-prose li { margin-bottom: 0.2rem; }
+    .ai-prose strong { font-weight: 600; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-cosmic-950 dark:text-slate-100 min-h-screen relative selection:bg-indigo-500 selection:text-white">
+
+  <!-- Hardware-Accelerated Ambient Glow Orbs -->
+  <div class="ambient-orb w-96 h-96 bg-indigo-600/20 dark:bg-indigo-600/20 -top-24 -left-24 animate-pulse-slow"></div>
+  <div class="ambient-orb w-[28rem] h-[28rem] bg-violet-500/15 dark:bg-violet-600/15 top-1/3 -right-32 animate-pulse-slow" style="animation-delay: 2s;"></div>
+  <div class="ambient-orb w-80 h-80 bg-amber-500/15 dark:bg-amber-500/10 bottom-10 left-1/4 animate-pulse-slow" style="animation-delay: 4s;"></div>
+
+  <!-- Toast Notification Banner (Replaces alert()) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Sticky Navigation Bar -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-indigo-500/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-amber-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-extrabold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-violet-500 to-amber-500">Sleep AI</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <a href="#calculator-section" data-i18n="nav_calculator" class="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Калькулятор фаз</a>
+        <a href="#alarm-section" data-i18n="nav_alarm" class="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Умный будильник</a>
+        <a href="#sleep-ai-section" data-i18n="nav_ai" class="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Sleep AI
+        </a>
+        <a href="#tracker-section" data-i18n="nav_tracker" class="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Аналитика</a>
+        <a href="#soundscape-section" data-i18n="nav_sounds" class="hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">Звуки сна</a>
+      </nav>
+
+      <!-- Controls: Language Switcher, Theme Toggle, Settings Button -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 3-Language Switcher (KZ / RU / EN) -->
+        <div class="flex items-center p-1 rounded-xl bg-slate-200/80 dark:bg-cosmic-800/90 border border-slate-300/60 dark:border-indigo-500/20" role="group" aria-label="Language Switcher">
+          <button onclick="setLanguage('kz')" id="lang-btn-kz" class="lang-btn px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all">KZ</button>
+          <button onclick="setLanguage('ru')" id="lang-btn-ru" class="lang-btn px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all">RU</button>
+          <button onclick="setLanguage('en')" id="lang-btn-en" class="lang-btn px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-all">EN</button>
+        </div>
+
+        <!-- Theme Switcher Button -->
+        <button onclick="toggleTheme()" id="theme-toggle-btn" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-cosmic-800/90 hover:bg-indigo-500/20 border border-slate-300/60 dark:border-indigo-500/20 transition-all text-slate-700 dark:text-amber-400" title="Switch Theme">
+          <!-- Sun Icon (shown in dark mode) -->
+          <svg id="icon-sun" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- Moon Icon (shown in light mode) -->
+          <svg id="icon-moon" class="w-4 h-4 block dark:hidden text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+
+        <!-- Settings Modal Trigger -->
+        <button onclick="toggleSettingsModal(true)" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-cosmic-800/90 hover:bg-indigo-500/20 border border-slate-300/60 dark:border-indigo-500/20 transition-all text-slate-700 dark:text-slate-200" title="Settings">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-14 sm:space-y-20">
+
+    <!-- 1. HERO SECTION -->
+    <section class="text-center max-w-3xl mx-auto space-y-6 pt-2">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/25 text-indigo-600 dark:text-indigo-300 text-xs font-semibold tracking-wide">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span data-i18n="hero_badge">НЕЙРОБИОЛОГИЯ И ИСКУССТВЕННЫЙ ИНТЕЛЛЕКТ</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+        <span data-i18n="hero_title_1">Оптимизируй свой</span>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-violet-500 to-amber-500" data-i18n="hero_title_highlight">режим сна</span>
+        <span data-i18n="hero_title_2">с помощью науки и ИИ</span>
+      </h1>
+
+      <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed" data-i18n="hero_subtitle">
+        Интеллектуальная система расчёта фаз сна, синтеза бинауральных волн и персонализированных рекомендаций Sleep AI для максимальной продуктивности и восстановления мозга.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+        <a href="#sleep-ai-section" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2">
+          <span>✨</span>
+          <span data-i18n="btn_ask_ai">Запустить Sleep AI</span>
+        </a>
+        <a href="#calculator-section" class="px-6 py-3 rounded-2xl glass-panel hover:border-indigo-500/50 font-semibold text-sm transition-all flex items-center gap-2">
+          <span>⏱️</span>
+          <span data-i18n="btn_calc_cycles">Рассчитать циклы сна</span>
+        </a>
+        <a href="#alarm-section" class="px-6 py-3 rounded-2xl glass-panel hover:border-amber-500/50 font-semibold text-sm transition-all flex items-center gap-2">
+          <span>⏰</span>
+          <span data-i18n="btn_open_alarm">Умный будильник</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 2. SMART 90-MINUTE SLEEP CYCLE CALCULATOR -->
+    <section id="calculator-section" class="glass-panel rounded-3xl p-6 sm:p-8 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/70 dark:border-indigo-500/15 pb-5">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-indigo-500 font-semibold" data-i18n="calc_tag">НЕЙРО-ХРОНОМЕТР</span>
+          <h2 class="text-2xl sm:text-3xl font-bold mt-1" data-i18n="calc_title">Умный калькулятор циклов сна</h2>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1" data-i18n="calc_desc">
+            Просыпайтесь в конце 90-минутного цикла REM/NREM, чтобы избежать инерции сна и чувствовать бодрость.
+          </p>
+        </div>
+        <div class="text-xs font-mono px-3 py-1.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 self-start md:self-auto">
+          <span data-i18n="calc_latency_badge">Засыпание:</span> <strong id="display-latency">15</strong> <span data-i18n="unit_min">мин</span>
+        </div>
+      </div>
+
+      <!-- Mode Tabs & Time Controls -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-5 space-y-4">
+          <!-- Mode Switch -->
+          <div class="grid grid-cols-2 p-1 rounded-2xl bg-slate-200/80 dark:bg-cosmic-800">
+            <button id="calc-mode-wake" onclick="setCalcMode('wake')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all bg-indigo-600 text-white shadow">
+              <span data-i18n="calc_mode_wake">Я хочу проснуться в...</span>
+            </button>
+            <button id="calc-mode-sleep" onclick="setCalcMode('sleep')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all text-slate-600 dark:text-slate-300">
+              <span data-i18n="calc_mode_sleep">Я ложусь спать в...</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="time" id="calc-time-input" value="07:00" onchange="calculateSleepCycles()" class="flex-1 px-4 py-3 rounded-2xl bg-slate-100 dark:bg-cosmic-800 border border-slate-300 dark:border-indigo-500/30 font-mono text-xl font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            <button onclick="sleepNow()" class="px-4 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition-all shrink-0 flex items-center gap-1.5">
+              <span>⚡</span>
+              <span data-i18n="calc_sleep_now">Спать сейчас</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Calculated Cycle Cards -->
+        <div class="lg:col-span-7">
+          <p id="calc-result-heading" class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3" data-i18n="calc_res_wake_heading">
+            Оптимальное время отхода ко сну:
+          </p>
+          <div id="calc-results-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2.5 SMART ANTI-OVERSLEEP ALARM SECTION -->
+    <section id="alarm-section" class="glass-panel rounded-3xl p-6 sm:p-8 space-y-6 border border-amber-500/25">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/70 dark:border-indigo-500/15 pb-5">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono uppercase tracking-wider text-amber-500 font-semibold" data-i18n="alarm_tag">ЗАЩИТА ОТ ПРОСЫПАНИЯ</span>
+            <span id="alarm-status-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase font-bold bg-slate-500/15 text-slate-500 dark:text-slate-400" data-i18n="alarm_status_off">ВЫКЛЮЧЕН</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold mt-1" data-i18n="alarm_title">Умный будильник с когнитивной проверкой</h2>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1" data-i18n="alarm_desc">
+            Чтобы выключить сигнал, мозгу нужно решить математическую задачу или расшифровать визуальную капчу — гарантированное пробуждение без повторного засыпания.
+          </p>
+        </div>
+
+        <!-- Live Digital Clock -->
+        <div class="px-5 py-3 rounded-2xl bg-slate-100/90 dark:bg-cosmic-900/90 border border-slate-200 dark:border-indigo-500/25 text-center shrink-0">
+          <div class="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400" data-i18n="alarm_live_clock">Текущее время</div>
+          <div id="live-digital-clock" class="font-mono text-2xl sm:text-3xl font-extrabold tracking-wider text-indigo-600 dark:text-indigo-300">00:00:00</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left: Alarm Time & Toggle Controls -->
+        <div class="lg:col-span-5 space-y-4 bg-slate-100/70 dark:bg-cosmic-900/70 p-5 rounded-2xl border border-slate-200/80 dark:border-indigo-500/15">
+          <div class="flex items-center justify-between">
+            <label for="alarm-time-input" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="alarm_set_time_label">Время сигнала</label>
+            <button type="button" onclick="setAlarmPlusOneMinute()" class="text-xs font-mono px-2.5 py-1 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-600 dark:text-indigo-300 font-semibold transition" data-i18n="alarm_plus_1m">
+              +1 мин от сейчас
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="time" id="alarm-time-input" value="07:00" onchange="onAlarmTimeChange()" class="flex-1 px-4 py-3 rounded-2xl bg-white dark:bg-cosmic-800 border border-slate-300 dark:border-indigo-500/30 font-mono text-2xl font-extrabold focus:outline-none focus:ring-2 focus:ring-amber-500" />
+            <button type="button" id="alarm-toggle-btn" onclick="toggleAlarmArmed()" class="px-5 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 transition-all shrink-0" data-i18n="alarm_btn_arm">
+              Включить
+            </button>
+          </div>
+
+          <!-- Instant Demo Test Button -->
+          <div class="pt-1">
+            <button type="button" onclick="triggerAlarmRing(true)" class="w-full py-2.5 px-4 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-700 dark:text-amber-300 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2">
+              <span>🔔</span>
+              <span data-i18n="alarm_btn_test">Проверить будильник прямо сейчас (Демо)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Challenge Mode & Difficulty Selector -->
+        <div class="lg:col-span-7 space-y-4 bg-slate-100/70 dark:bg-cosmic-900/
